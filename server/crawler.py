@@ -22,7 +22,7 @@ for anchor in soup.find_all("a"):
     link = anchor.get("href")
     for i in news :
         if link and i in link:
-            links[i].append(link)
+            links[i].append(link[7:])
 
 
 json_str = json.dumps(links)

@@ -4,7 +4,8 @@ const companySchema = mongoose.Schema({
     name: { type: String },
     links:[
         {newsName:{type:String}, newsLink:[{type:String}]}
-    ]
+    ],
+    headlines: { type: String }
 });
 
 const Company = mongoose.model("Company", companySchema);
