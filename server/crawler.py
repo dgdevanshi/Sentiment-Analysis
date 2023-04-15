@@ -1,22 +1,30 @@
 import requests
 from bs4 import BeautifulSoup
 import sys
+import json
 
 q = str(sys.stdin.readline()) + " stock share news"
 
 url = f"https://www.google.com/search?q={q}&start=0"
-links = set()
 
 response = requests.get(url)
 soup = BeautifulSoup(response.content, "html.parser")
 
-links = []
+news = ["moneycontrol.com", "livemint.com", "economictimes.com", 
+        "business-standard.com", "thehindubusinessline.com", "thehindu.com", 
+        "indianexpress.com", "ndtv.com", "businessinsider.in", "financialexpress.com"]
+
+links = {}
+for i in news :
+    links[i] = []
+
 for anchor in soup.find_all("a"):
     link = anchor.get("href")
-    if link and "moneycontrol.com" in link:
-        links.append(link)
-print(links)
+    for i in news :
+        if link and i in link:
+            links[i].append(link)
 
-links = str(links)
-sys.stdout.write(links)
+
+json_str = json.dumps(links)
+sys.stdout.write(json_str)
 sys.stdout.flush()

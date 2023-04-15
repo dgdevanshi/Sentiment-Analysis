@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const {spawn} = require("child_process");
 
-const companySchema = require("./models/company");
+const Company = require("./models/company");
 
 const PORT = process.env.PORT || 3696;
 const app = express();
@@ -17,20 +17,42 @@ app.get("/", (req, res) => {
 });
 
 
-app.get("/company", (req, res) => {
+app.get("/company", async (req, res) => {
     let data1;
-    const input = req.query.company;
+    let input = req.query.company;
+    input = input.toLowerCase();
     const py = spawn("python", ["crawler.py"]);
     py.stdin.write(input);
     py.stdin.end(); 
     py.stdout.on("data", (data) => {
         data1 = data.toString()
     });
-    py.on("close", (code) => {
+    py.on("close", async (code) => {
         res.send(data1)
+        const myObj = JSON.parse(data1);
+        let newLinks = []
+        for (let key in myObj) {
+            newLinks.push({newsName: key, newsLink: myObj[key]})
+        }
+        const company = await Company.findOne({name: input});
+        if (company) {
+            for (let key in myObj) {
+                company.links.forEach(link => {
+                const newsName = link.newsName;
+                const newsLink = link.newsLink;
+                if (newsName === key) {
+                    newsLink.push(myObj[key]);
+                } else {
+                    company.links.push({key, newsLink: myObj[key]})
+                }
+                })
+            }
+            company.save()
+        } else {
+            let newCompany = new Company({name: input, links: newLinks});
+            newCompany.save(); 
+        }
     });
-
-    
 });
 
 
