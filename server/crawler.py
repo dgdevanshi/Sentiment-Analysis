@@ -10,7 +10,7 @@ url = f"https://www.google.com/search?q={q}&start=0"
 response = requests.get(url)
 soup = BeautifulSoup(response.content, "html.parser")
 
-news = ["moneycontrol.com", "economictimes.com"]#, "livemint.com" 
+news = ["economictimes.com", "moneycontrol.com"]#, "livemint.com" 
         # "business-standard.com", "thehindubusinessline.com", "thehindu.com", 
         # "indianexpress.com", "ndtv.com", "businessinsider.in", "financialexpress.com"]
 

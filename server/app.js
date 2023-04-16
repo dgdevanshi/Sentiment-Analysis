@@ -35,7 +35,6 @@ app.get("/company", async (req, res) => {
         let newHeadlines = ""
         let data2;
         for (let key in myObj) {
-            console.log("scraping for " + key)
             for (let i in myObj[key]) {
                 let l = myObj[key][i].toString();
                 py2 = spawn("python", ["scraper.py", l]);
@@ -51,34 +50,26 @@ app.get("/company", async (req, res) => {
                 await processHeadlines();              
                 py2.on("close", (req, res) => {})
             }
-            console.log("scraped for " + key) 
         }
-        console.log("got headlines")
         const company = await Company.findOne({name: input});
+         console.log(myObj);
         if (company) {
             for (let key in myObj) {
-                console.log(key)
+                let isFound=false;
                 for (let i in company.links) {
                     const newsName = company.links[i].newsName;
-                    console.log(newsName)
                     if (newsName === key) {
-                        console.log("in if")
-                        console.log(company.links[i].newsName)
                         company.links[i].newsLink.push(...myObj[key]);
                         company.headlines += newHeadlines;
-                        console.log("out if")
                         break
                     }
                 }
-                const newLinkObj = {newsName: key, newsLink: myObj[key], headlines: company.headlines+newHeadlines};
-                company.links.push(newLinkObj);
                 await company.save() 
             }
         } else {
             let newCompany = new Company({name: input, links: newLinks, headlines: newHeadlines});
             newCompany.save(); 
         }
-        // console.log(headlines)
     });
     py.on("close", (code) => { 
         res.send("Done") 
