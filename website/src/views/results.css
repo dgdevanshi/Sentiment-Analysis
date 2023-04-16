@@ -1,0 +1,60 @@
+body {
+    background-color: black;
+    color: white;
+    font-size: 20px;
+  }
+  
+  .centered-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  .middle-section{
+    margin-top: 5vh;
+  }
+  .company-info {
+    text-align: center;
+  }
+  
+  .company-name {
+    font-size: 50px;
+    color: #24e86a;
+  }
+  .article-box {
+    background-color: black;
+    border: 2px solid #66fcf1;
+    padding: 15px;
+    font-size: 20px;
+  }
+
+  .text-green{
+    color: #24e86a;
+  }
+  .text-blue{
+    color: #66fcf1;
+  }
+  
+  .articles {
+    margin-top: 10vh;
+    text-align: center;
+  }
+ 
+  .articles ul {
+    padding: 0;
+    text-align: left;
+    list-style-type: none;
+  }
+
+  .middle-section {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .articles li {
+    margin-top: 13px;
+    margin-left: 1rem;
+
+  }
+  
