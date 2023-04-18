@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const {spawn} = require("child_process");
 
 const Company = require("./models/company");
+const model = require('./model.joblib');
 
 const PORT = process.env.PORT || 3696;
 const app = express();
@@ -52,7 +53,7 @@ app.get("/company", async (req, res) => {
             }
         }
         const company = await Company.findOne({name: input});
-         console.log(myObj);
+        console.log(myObj);
         if (company) {
             for (let key in myObj) {
                 let isFound=false;
@@ -74,6 +75,8 @@ app.get("/company", async (req, res) => {
     py.on("close", (code) => { 
         res.send("Done") 
     }); 
+
+    
 });
 
 
@@ -90,3 +93,38 @@ mongoose
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`connected at port ${PORT}`);
 });
+
+// call python model to predict
+// const { spawn } = require('child_process');
+
+// // Define a function to make predictions using the model
+// function predict(text) {
+//   return new Promise((resolve, reject) => {
+//     // Spawn a new Python process
+//     const pythonProcess = spawn('python', ['predict.py']);
+
+//     // Send the text data to the Python script
+//     pythonProcess.stdin.write(text + '\n');
+
+//     // Receive the predicted label from the Python script
+//     pythonProcess.stdout.on('data', (data) => {
+//       const label = data.toString().trim();
+//       resolve(label);
+//     });
+
+//     // Handle errors
+//     pythonProcess.on('error', (err) => {
+//       reject(err);
+//     });
+//   });
+// }
+
+// // Example usage
+// const text = 'This is a test sentence.';
+// predict(text)
+//   .then((label) => {
+//     console.log(`Predicted label: ${label}`);
+//   })
+//   .catch((err) => {
+//     console.error(err);
+//   });
