@@ -22,6 +22,7 @@ app.get("/company", async (req, res) => {
     let newHeadlines = ""
     let input = req.query.company;
     input = input.toLowerCase();
+    const company = await Company.findOne({name: input});
     const py = spawn("python", ["crawler.py"]);
     py.stdin.write(input);
     py.stdin.end(); 
@@ -50,7 +51,7 @@ app.get("/company", async (req, res) => {
                 py2.on("close", (req, res) => {})
             }
         }
-        const company = await Company.findOne({name: input});
+        
         if (company) {
             for (let key in myObj) {
                 for (let i in company.links) {
@@ -68,6 +69,7 @@ app.get("/company", async (req, res) => {
             newCompany.save(); 
         }
     });
+
     py.on("close", (code) => { 
         console.log("Crawled, Scraped and Saved") 
     }); 
@@ -89,6 +91,16 @@ app.get("/company", async (req, res) => {
     py3.on("close", (code) => {
         console.log("Predicted")
     });
+
+    let companyLink=[];
+
+    for( let element in company.links){
+        let newsLinkArray=element['newsLink'];
+        companyLink.push({
+            newsName:element['newsName'],
+            newsLink:newsLinkArray[newsLinkArray.length-1]});
+    }
+    
 });
 
 
