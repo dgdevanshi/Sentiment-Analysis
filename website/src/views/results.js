@@ -2,6 +2,7 @@ import React from 'react';
 import './results.css';
 
 const Results = () => {
+  //const { data } = props.location.state;
   return (
     <div className="centered-container">
       <div className="company-info">
