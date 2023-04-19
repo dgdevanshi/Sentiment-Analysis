@@ -2,6 +2,7 @@ body {
     background-color: black;
     color: white;
     font-size: 20px;
+    font-family: 'Inter', sans-serif;
   }
   
   .centered-container {
@@ -11,15 +12,23 @@ body {
     justify-content: center;
     height: 100vh;
   }
+  .sentiment-analysis{
+    margin-top: 7vh;
+  }
   .middle-section{
-    margin-top: 5vh;
+    margin-top: 3vh;
+    text-align: left;
+  }
+  .article-headline{
+    font-style: italic;
+    font-size: 15;
   }
   .company-info {
     text-align: center;
   }
   
   .company-name {
-    font-size: 50px;
+    font-size: 75px;
     color: #24e86a;
   }
   .article-box {
@@ -35,26 +44,49 @@ body {
   .text-blue{
     color: #66fcf1;
   }
+
+ 
   
   .articles {
     margin-top: 10vh;
-    text-align: center;
-  }
+    width: 55vw;
+    text-align: left;
+  } */
  
-  .articles ul {
+   .articles ul {
     padding: 0;
     text-align: left;
     list-style-type: none;
   }
+  .text-red{
+    color: red;
+  }
 
   .middle-section {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+  }
+  .text-grey{
+    color: grey;
+  }
+  .price{
+      display: flex;
+      justify-content: end;
+      font-size: 30px;
   }
   
   .articles li {
     margin-top: 13px;
     margin-left: 1rem;
-
+    display: flex;
+  align-items: center;
+  justify-content: space-between;
   }
+
+  .clickable{
+    font-size: 15px;
+    font-weight: bolder;
+   }
+
+  
   
