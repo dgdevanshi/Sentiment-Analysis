@@ -3,14 +3,14 @@ from bs4 import BeautifulSoup
 import sys
 import json
 
-q = str(sys.stdin.readline()) + " stock share news"
-
+# q = str(sys.stdin.readline()) + " stock share news"
+q = "lic stock share news"
 url = f"https://www.google.com/search?q={q}&start=0"
 
 response = requests.get(url)
 soup = BeautifulSoup(response.content, "html.parser")
 
-news = ["economictimes.com", "moneycontrol.com"]#, "livemint.com" 
+news = ["livemint.com"]# 
         # "business-standard.com", "thehindubusinessline.com", "thehindu.com", 
         # "indianexpress.com", "ndtv.com", "businessinsider.in", "financialexpress.com"]
 
@@ -22,7 +22,10 @@ for anchor in soup.find_all("a"):
     link = anchor.get("href")
     for i in news :
         if link and i in link:
-            links[i].append(link[7:])
+            l = link[7:]
+            html_index = l.find(".html")
+            l = l[:html_index + 5]
+            links[i].append(l)
 
 
 json_str = json.dumps(links)

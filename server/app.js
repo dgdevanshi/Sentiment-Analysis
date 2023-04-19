@@ -22,7 +22,6 @@ app.get("/company", async (req, res) => {
     let newHeadlines = ""
     let input = req.query.company;
     input = input.toLowerCase();
-    const company = await Company.findOne({name: input});
     const py = spawn("python", ["crawler.py"]);
     py.stdin.write(input);
     py.stdin.end(); 
@@ -41,7 +40,7 @@ app.get("/company", async (req, res) => {
                 function processHeadlines() {
                     return new Promise((resolve, reject) => {
                         py2.stdout.on("data", async (data) => {
-                            data2 = data.toString()
+                            data2 = data.toString();
                             newHeadlines += data2
                             resolve(); 
                         });
@@ -51,7 +50,7 @@ app.get("/company", async (req, res) => {
                 py2.on("close", (req, res) => {})
             }
         }
-        
+        const company = await Company.findOne({name: input});
         if (company) {
             for (let key in myObj) {
                 for (let i in company.links) {
@@ -66,7 +65,7 @@ app.get("/company", async (req, res) => {
             }
         } else {
             let newCompany = new Company({name: input, links: newLinks, headlines: newHeadlines});
-            newCompany.save(); 
+            await newCompany.save(); 
         }
     });
 
@@ -75,7 +74,9 @@ app.get("/company", async (req, res) => {
     }); 
 
     const py3 = spawn("python", ["predict.py"]);
-    test = newHeadlines.toString()
+    const company = await Company.findOne({name: input});
+    test = company.headlines.toString();
+    // test = newHeadlines.toString();
     py3.stdin.write(test)
     py3.stdin.end();
     function predictSentiment() {
@@ -93,7 +94,6 @@ app.get("/company", async (req, res) => {
     });
 
     let companyLink=[];
-
     for( let element in company.links){
         let newsLinkArray=element['newsLink'];
         companyLink.push({
