@@ -7,7 +7,7 @@ nltk.download("wordnet")
 nltk.download("punkt")
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.externals import joblib
+import pickle
 
 df = pd.read_csv('data.csv')
 df.dropna(inplace=True)
@@ -73,4 +73,10 @@ X_train = vectorizer.fit_transform(headlines)
 model = MultinomialNB()
 model.fit(X_train, y_train)
 
-joblib.dump(model, 'model.joblib')
+with open("model_pickle", "wb") as f :
+    pickle.dump(model, f)
+
+def make_predictions(model, test):
+    test = vectorizer.transform(test)
+    predictions = model.predict(test)
+    return predictions
