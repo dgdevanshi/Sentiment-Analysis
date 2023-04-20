@@ -4,7 +4,6 @@ import sys
 import json
 
 url = sys.argv[1]
-#url="https://www.livemint.com/market/stock-market-news/lic-share-price-may-give-25-return-in-long-term-says-yes-securities-11676277674080.html"
 headlines = ""
 
 result = req.get(url)
