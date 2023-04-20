@@ -10,9 +10,7 @@ url = f"https://www.google.com/search?q={q}&start=0"
 response = requests.get(url)
 soup = BeautifulSoup(response.content, "html.parser")
 
-news = ["livemint.com", "zeebiz.com"] 
-        # "business-standard.com", "thehindubusinessline.com", "thehindu.com", 
-        # "indianexpress.com", "ndtv.com", "businessinsider.in", "financialexpress.com"]
+news = ["livemint.com", "zeebiz.com", "moneycontrol.com"] 
 
 links = {}
 for i in news :
@@ -26,7 +24,7 @@ for anchor in soup.find_all("a"):
             if i=="livemint.com" :
                 html_index = l.find(".html")
                 l = l[:html_index + 5]
-            if i=="zeebiz.com" :
+            elif i=="zeebiz.com" :
                 and_index = l.find("&")
                 l = l[:and_index]
             links[i].append(l)
