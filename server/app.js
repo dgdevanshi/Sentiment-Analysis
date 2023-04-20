@@ -89,12 +89,11 @@ app.get("/company", async (req, res) => {
         py.on("close", (code) => { 
             console.log("Crawled, Scraped and Saved") 
         });
-        console.log(newHeadlines);
     const py3 = spawn("python", ["predict.py"]);
     test = company.headlines.toString();
     // test = newHeadlines.toString();
     py3.stdin.end();
-    console.log(test);
+
     function predictSentiment() {
         return new Promise((resolve, reject) => {
             py3.stdout.on("data", async (data) => {
@@ -109,13 +108,13 @@ app.get("/company", async (req, res) => {
         console.log("Predicted")
     });
 
-    let companyLink=[];
-    for( let element in company.links){
-        let newsLinkArray=element['newsLink'];
-        companyLink.push({
-            newsName:element['newsName'],
-            newsLink:newsLinkArray[newsLinkArray.length-1]});
-    }
+    // let companyLink=[];
+    // for( let element in company.links){
+    //     let newsLinkArray=element['newsLink'];
+    //     companyLink.push({
+    //         newsName:element['newsName'],
+    //         newsLink:newsLinkArray[newsLinkArray.length-1]});
+    // }
     
 });
 
