@@ -89,25 +89,35 @@ app.get("/company", async (req, res) => {
     const company = await Company.findOne({name: input});
 
         let {newHeadlines,py} = await processHeadlines(input,data1,company);
-
+        
         py.on("close", (code) => { 
             console.log("Crawled, Scraped and Saved") 
         });
+    console.log("heree")
     const py3 = spawn("python", ["predict.py"]);
-    test = company.headlines.toString();
+    const company2 = await Company.findOne({name: input});
+    test = company2.headlines.toString();
+    console.log(test)
+    py3.stdin.write(test);
     py3.stdin.end();
-
+    let model_predictions = []
     function predictSentiment() {
         return new Promise((resolve, reject) => {
             py3.stdout.on("data", async (data) => {
+                console.log("in py3");
                 let data3 = data.toString();
+                const preds = JSON.parse(data3);
+                for (i in preds) {
+                    model_predictions.push({modelName: i, prediction: preds[i]});
+                }
                 resolve();
             });
         });
     }
     await predictSentiment();
     py3.on("close", (code) => {
-        console.log("Predicted")
+        console.log(model_predictions);
+        console.log("Predicted");
     });
 
     //fetching media house name and their latest newsLink

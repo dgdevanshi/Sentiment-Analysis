@@ -2,9 +2,9 @@ import pandas as pd
 import string
 import re
 import nltk
-nltk.download("stopwords")
-nltk.download("wordnet")
-nltk.download("punkt")
+# nltk.download("stopwords")
+# nltk.download("wordnet")
+# nltk.download("punkt")
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 import pickle
@@ -70,13 +70,13 @@ for row in range(0, len(X_train.index)):
 vectorizer = TfidfVectorizer(ngram_range=(2,2))
 X_train = vectorizer.fit_transform(headlines)
 
-model = MultinomialNB()
-model.fit(X_train, y_train)
+mnb = MultinomialNB()
+mnb.fit(X_train, y_train)
 
-with open("model_pickle", "wb") as f :
-    pickle.dump(model, f)
+with open("mnb_model_pickle", "wb") as f :
+    pickle.dump(mnb, f)
 
-def make_predictions(model, test):
+def make_predictions_mnb(mnb, test):
     test = vectorizer.transform(test)
-    predictions = model.predict(test)
+    predictions = mnb.predict(test)
     return predictions
