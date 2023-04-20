@@ -29,7 +29,6 @@ async function processHeadlines(input,data1,company) {
             for (let key in myObj) {
                 newLinks.push({newsName: key, newsLink: myObj[key]})
             }
-            console.log("Here 1");
             let data2;
             for (let key in myObj) {
                 for (let i in myObj[key]) {
@@ -38,7 +37,6 @@ async function processHeadlines(input,data1,company) {
                     function processHeadlines() {
                         return new Promise((resolve, reject) => {
                             py2.stdout.on("data", async (data) => {
-                                console.log("Here 2");
                                 data2 = data.toString();
                                 newHeadlines += data2
                                 resolve(); 
@@ -51,13 +49,17 @@ async function processHeadlines(input,data1,company) {
                 }
             }
     
-            console.log("Here 4");
             
             if (company) {
                 for (let key in myObj) {
                     for (let i in company.links) {
                         const newsName = company.links[i].newsName;
                         if (newsName === key) {
+                            console.log(newsName);
+                            console.log("NewsName above");
+                            
+                            if(company.links[i].newsLink.includes(...myObj[key]))
+                            {break;}
                             company.links[i].newsLink.push(...myObj[key]);
                             company.headlines += newHeadlines;
                             break
@@ -89,34 +91,36 @@ app.get("/company", async (req, res) => {
         py.on("close", (code) => { 
             console.log("Crawled, Scraped and Saved") 
         });
-    const py3 = spawn("python", ["predict.py"]);
-    test = company.headlines.toString();
-    // test = newHeadlines.toString();
-    py3.stdin.end();
+    // const py3 = spawn("python", ["predict.py"]);
+    // test = company.headlines.toString();
+    // py3.stdin.end();
 
-    function predictSentiment() {
-        return new Promise((resolve, reject) => {
-            py3.stdout.on("data", async (data) => {
-                let data3 = data.toString();
-                res.send("Sentiment: " + data3);
-                resolve();
-            });
-        });
-    }
-    await predictSentiment();
-    py3.on("close", (code) => {
-        console.log("Predicted")
-    });
-
-
-    // let companyLink=[];
-    // for( let element in company.links){
-    //     let newsLinkArray=element['newsLink'];
-    //     companyLink.push({
-    //         newsName:element['newsName'],
-    //         newsLink:newsLinkArray[newsLinkArray.length-1]});
+    // function predictSentiment() {
+    //     return new Promise((resolve, reject) => {
+    //         py3.stdout.on("data", async (data) => {
+    //             let data3 = data.toString();
+    //             res.send("Sentiment: " + data3);
+    //             resolve();
+    //         });
+    //     });
     // }
+    // await predictSentiment();
+    // py3.on("close", (code) => {
+    //     console.log("Predicted")
+    // });
 
+    
+
+    //fetching media house name and their latest newsLink
+    let companyLink=[];
+    for( let index in company.links){
+        let newsLinkArray=company.links[index].newsLink;
+        companyLink.push({
+            newsName:company.links[index].newsName,
+            newsLink:newsLinkArray[newsLinkArray.length-1]});
+    }
+
+    console.log(companyLink);
     
 });
 
