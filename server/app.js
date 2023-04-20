@@ -116,6 +116,7 @@ app.get("/company", async (req, res) => {
             newsName:element['newsName'],
             newsLink:newsLinkArray[newsLinkArray.length-1]});
     }
+
     
 });
 
