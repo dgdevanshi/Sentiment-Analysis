@@ -11,7 +11,7 @@ const Home = (props) => {
     setLoading(true);
   
     try {
-      const response = await fetch('https://example.com/api/data', {
+      const response = await fetch('http://localhost:3696/company', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

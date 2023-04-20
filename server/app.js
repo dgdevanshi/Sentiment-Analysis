@@ -81,7 +81,9 @@ async function processHeadlines(input,data1,company) {
 
 
 app.get("/company", async (req, res) => {
-    let data1;
+    try{
+
+        let data1;
     let input = req.query.company;
     input = input.toLowerCase();
     const company = await Company.findOne({name: input});
@@ -120,7 +122,15 @@ app.get("/company", async (req, res) => {
             newsLink:newsLinkArray[newsLinkArray.length-1]});
     }
 
-    console.log(companyLink);
+    // add current price, and model wise prediction
+    res.send({
+        name:input,
+        companyLink
+    });
+    } catch(e){
+res.status(500).send({msg:"Something went wrong"});
+console.log(e.toString);
+    }
     
 });
 
