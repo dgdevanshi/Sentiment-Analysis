@@ -3,8 +3,8 @@ from bs4 import BeautifulSoup
 import sys
 import json
 
-# q = str(sys.stdin.readline()) + " stock share news"
-q = "lic stock share news"
+q = str(sys.stdin.readline()) + " stock share news"
+#q = "lic stock share news"
 url = f"https://www.google.com/search?q={q}&start=0"
 
 response = requests.get(url)
