@@ -14,7 +14,7 @@ const Home = (props) => {
     const searchQuery = searchInputRef.current.value;
     console.log(searchQuery);
     try {
-      const response = await fetch(`http://192.168.91.81:3696/company?company=${searchQuery}`, {
+      const response = await fetch(`http://localhost:3696/company?company=${searchQuery}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
