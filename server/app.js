@@ -1,14 +1,14 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const {spawn} = require("child_process");
-
 const Company = require("./models/company");
-
+const cors = require("cors");
 const PORT = process.env.PORT || 3696;
 const app = express();
 const DB = "mongodb+srv://dg325:7cKarDuMHNHxnhbn@companies.yp9t9ui.mongodb.net/?retryWrites=true&w=majority"
 
 app.use(express.json());
+app.use(cors());
 app.set("view engine", "ejs");
 app.set("views", "views");
 
@@ -90,6 +90,7 @@ async function crawlLinks(input, data1, company) {
 
 app.get("/company", async (req, res) => {
     try{
+        console.log("called");
         let data1;
         let input = req.query.company;
         input = input.toLowerCase();

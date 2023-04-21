@@ -2,9 +2,10 @@ import pandas as pd
 import string
 import re
 import nltk
-# nltk.download("stopwords")
-# nltk.download("wordnet")
-# nltk.download("punkt")
+nltk.download("stopwords")
+nltk.download("wordnet")
+nltk.download("punkt")
+nltk.download("omw-1.4")
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 import pickle

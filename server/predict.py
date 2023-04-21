@@ -11,6 +11,7 @@ with open("knn_model_pickle", "rb") as f:
     knn = pickle.load(f)
 
 test = str(sys.stdin.readline())
+#test = "lic is going down"
 test = [test]
 
 predictions_mnb = mnbLib.make_predictions_mnb(mnb, test)
