@@ -1,17 +1,20 @@
-import {useState,React} from 'react'
+import {useState,React,useRef} from 'react'
 import { useHistory } from 'react-router-dom';
 import './home.css'
 
 const Home = (props) => {
   const [loading, setLoading] = useState(false);
   const history = useHistory();
+  const searchInputRef = useRef(); 
 
   const handleSubmit = async (event) => {
+
     event.preventDefault();
     setLoading(true);
-  
+    const searchQuery = searchInputRef.current.value;
+    console.log(searchQuery);
     try {
-      const response = await fetch('http://localhost:3696/company', {
+      const response = await fetch(`http://192.168.91.81:3696/company?company=${searchQuery}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -19,7 +22,7 @@ const Home = (props) => {
       });
   
       const data = await response.json();
-  
+      console.log(data);
       setLoading(false);
       history.push({
         pathname: '/results',
@@ -49,7 +52,7 @@ const Home = (props) => {
             <form onSubmit={handleSubmit}>
               <section className="home-centered">
                 <div className="home-get-started">
-                  <input type="text" placeholder="Search your favourite stock" />
+                  <input type="text" placeholder="Search your favourite stock" ref={searchInputRef} />
                   <button type="submit">Search</button>
                 </div>
               </section>

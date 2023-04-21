@@ -2,20 +2,21 @@ import React from 'react';
 import './results.css';
 
 const Results = (props) => {
-  const { data,companyLink,predictions} = props.location.state;
+  const { price,companyLink,predictions,name} = props.location.state;
+  let len=price.length;
   return (
     <div className="centered-container">
       <div className="company-info">
-        <h1 className="company-name text-blue">Adani Enterprises</h1>
+        <h1 className="company-name text-blue">{name.toUpperCase()}</h1>
         <div className='price'>
-        <span className='price'> <span className='text-green' > ${data.price}</span>  </span>
+        <span className='price'> <span className='text-green' > ₹{price.substring(1,len-1)}</span>  </span>
         </div>
 
         <div className='sentiment-analysis'>
         {predictions.map((model) => (
             <div className='middle-section'>
-            <span className="sentiment">Sentiment:<span className='text-green'>{model.modelName}</span></span>
-            <span className="sentiment"><span className='text-blue' >{model.prediction === 1 ? 'Positive' : 'Negative'}</span>  </span>
+            <span className="sentiment">Sentiment: <span className='text-green'>{model.modelName.toUpperCase()}</span></span>
+            <span className="sentiment"><span className='text-blue' >{model.prediction === '1' ? 'Positive' : 'Negative'}</span>  </span>
             </div>
           ))}
 
@@ -32,7 +33,7 @@ const Results = (props) => {
      
       </div>
       <div className="articles">
-        <h2 className='article-headline'>Top 5 articles of the day</h2>
+        <h2 className='article-headline'>Top {companyLink.length} articles of the day</h2>
         <ul className='article-list'>
         {companyLink.map((article) => (
             <li>
