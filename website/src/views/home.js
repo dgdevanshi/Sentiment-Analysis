@@ -23,7 +23,7 @@ const Home = (props) => {
       setLoading(false);
       history.push({
         pathname: '/results',
-        state: { name: data.name, email: data.email, data: data.data },
+        state: { name: data.name, companyLink:data.companyLink,predictions:data.predictions, price: data.price },
       });
     } catch (error) {
       setLoading(false);
