@@ -4,6 +4,7 @@ import sys
 import json
 
 url = sys.argv[1]
+#url="https://www.livemint.com/market/stock-market-news/how-sun-pharma-s-acquisition-of-concert-pharma-can-help-the-pharma-stock-jefferies-explains-11680234226374.html"
 headlines = ""
 
 result = req.get(url)

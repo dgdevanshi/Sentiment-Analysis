@@ -17,22 +17,27 @@ app.get("/", (req, res) => {
 });
 
 async function crawlLinks(input, data1, company) {
+    console.log('crawlLinks');
     return new Promise((resolve, reject) => {
         let newHeadlines='';
-        let newPrice;
+        let newPrice='';
         py = spawn("python", ["crawler.py"]);
         py.stdin.write(input);
         py.stdin.end();
         py.stdout.on("data", async (data) => {
-            data1 = data.toString()
+            data1 = data.toString();
             const myObj = JSON.parse(data1)
+            console.log(myObj);
             let newLinks = []
             for (let key in myObj) {
                 newLinks.push({newsName: key, newsLink: myObj[key]})
             }
             let data2;
             for (let key in myObj) {
+                let firstTime=false;
                 for (let i in myObj[key]) {
+                    if(firstTime){break;}
+                    firstTime=true;
                     let l = myObj[key][i].toString();
                     if (l.includes("moneycontrol.com")) {
                         py4 = spawn("python", ["price-scraper.py", l]);
@@ -40,6 +45,7 @@ async function crawlLinks(input, data1, company) {
                             return new Promise((resolve, reject) => {
                                 py4.stdout.on("data", async (data)  => {
                                     newPrice = data.toString();
+                                    console.log(newPrice);
                                     resolve();
                                 });
                             });
@@ -47,11 +53,21 @@ async function crawlLinks(input, data1, company) {
                         await processPrice();
                         py4.on("close", (req, res) => {});
                     } else {
+                        console.log("hello world");
+                        if(l.includes("livemint")&&l.includes("share-price-nse-bse")){
+                            console.log("NSE BSE");
+                            firstTime=false;
+                            continue;
+                        }
+                        console.log("doosre links called");
                         py2 = spawn("python", ["scraper.py", l]);
                         function processHeadlines() {
+                            console.log("andar 1");
                             return new Promise((resolve, reject) => {
                                 py2.stdout.on("data", async (data) => {
+                                    console.log("andar 2");
                                     data2 = data.toString();
+                                    console.log(data2);
                                     newHeadlines += data2
                                     resolve(); 
                                 });
@@ -67,8 +83,7 @@ async function crawlLinks(input, data1, company) {
                     for (let i in company.links) {
                         const newsName = company.links[i].newsName;
                         if (newsName === key) {
-                            console.log(newsName);
-                            console.log("NewsName above");            
+                            console.log(newsName);           
                             if(company.links[i].newsLink.includes(...myObj[key]))
                             {break;}
                             company.links[i].newsLink.push(...myObj[key]);
@@ -82,7 +97,6 @@ async function crawlLinks(input, data1, company) {
                 let newCompany = new Company({name: input, links: newLinks, headlines: newHeadlines});
                 await newCompany.save(); 
             }
-            console.log('end of func');
             resolve({py, newPrice});
         });    
     });
@@ -90,7 +104,6 @@ async function crawlLinks(input, data1, company) {
 
 app.get("/company", async (req, res) => {
     try{
-        console.log("called");
         let data1;
         let input = req.query.company;
         input = input.toLowerCase();
@@ -99,7 +112,7 @@ app.get("/company", async (req, res) => {
         py.on("close", (code) => { 
             console.log("Crawled, Scraped and Saved") 
         });
-        console.log("heree")
+        console.log("Prediction Started")
         const py3 = spawn("python", ["predict.py"]);
         const company2 = await Company.findOne({name: input});
         test = company2.headlines.toString();
@@ -127,15 +140,16 @@ app.get("/company", async (req, res) => {
 
         //fetching media house name and their latest newsLink
         let companyLink=[];
-        for( let index in company.links){
-            let newsLinkArray=company.links[index].newsLink;
+        for( let index in company2.links){
+            let newsLinkArray=company2.links[index].newsLink;
             companyLink.push({
-                newsName:company.links[index].newsName,
+                newsName:company2.links[index].newsName,
                 newsLink:newsLinkArray[newsLinkArray.length-1]});
         }
 
         // add current price, and model wise prediction
-        res.send({name:input, companyLink, predictions: model_predictions, price: newPrice });
+        let jsonBody={name:input, companyLink, predictions: model_predictions, price: newPrice };
+        res.send(jsonBody);
     } catch(e) {
         res.status(500).send({msg:"Something went wrong"});
         console.log(e.toString);
