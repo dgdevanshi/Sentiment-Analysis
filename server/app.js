@@ -53,19 +53,17 @@ async function crawlLinks(input, data1, company) {
                         await processPrice();
                         py4.on("close", (req, res) => {});
                     } else {
-                        console.log("hello world");
                         if(l.includes("livemint")&&l.includes("share-price-nse-bse")){
                             console.log("NSE BSE");
                             firstTime=false;
                             continue;
                         }
-                        console.log("doosre links called");
                         py2 = spawn("python", ["scraper.py", l]);
                         function processHeadlines() {
-                            console.log("andar 1");
+                            console.log("Started");
                             return new Promise((resolve, reject) => {
                                 py2.stdout.on("data", async (data) => {
-                                    console.log("andar 2");
+                                    console.log("Ended");
                                     data2 = data.toString();
                                     console.log(data2);
                                     newHeadlines += data2
@@ -122,7 +120,6 @@ app.get("/company", async (req, res) => {
         function predictSentiment() {
             return new Promise((resolve, reject) => {
                 py3.stdout.on("data", async (data) => {
-                    console.log("in py3");
                     let data3 = data.toString();
                     const preds = JSON.parse(data3);
                     for (i in preds) {
